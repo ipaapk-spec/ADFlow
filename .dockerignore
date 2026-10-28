@@ -1,0 +1,16 @@
+node_modules
+.next
+.tmp
+temp
+data
+.env
+.env.*
+!.env.example
+.git
+.DS_Store
+*.log
+docs
+input
+tsconfig.tsbuildinfo
+runninghub_image_models.md
+runninghub_image_to_image.py

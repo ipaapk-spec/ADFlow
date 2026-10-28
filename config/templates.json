@@ -1,0 +1,62 @@
+[
+  {
+    "id": "bold-poster",
+    "name": "大胆排版海报",
+    "cover": "radial-gradient(120% 90% at 20% 10%, #2f8f63, #0b3b27)",
+    "coverText": "BREW BIG.",
+    "coverSub": "STARBUCKS COFFEE",
+    "ratio": "4:5",
+    "model": "fast",
+    "prompt": "4:5 垂直高级海报，纯色高饱和背景，超大粗体排版被激进裁切并延伸到画布边缘，产品置于画面中心并与文字重叠，强对比阴影，极简星光与箭头装饰，写实的冷凝水与冰块，高级印刷广告质感。没有漂浮元素、没有微缩景观、没有杂乱布局。"
+  },
+  {
+    "id": "ecommerce-white",
+    "name": "电商白底主图",
+    "cover": "radial-gradient(120% 90% at 50% 0%, #f5f1e8, #e2dacb)",
+    "coverText": "WHITE",
+    "coverSub": "E-COMMERCE MAIN",
+    "ratio": "1:1",
+    "model": "fast",
+    "prompt": "电商主图：纯白背景，产品居中占画面 70%，柔和影棚光，底部轻微接触阴影，画面干净无装饰，8K 产品摄影，真实材质与细节，边缘锐利。"
+  },
+  {
+    "id": "cinematic-scene",
+    "name": "电影感产品场景",
+    "cover": "radial-gradient(120% 90% at 80% 10%, #f3c78a, #a8552f)",
+    "coverText": "GOLDEN",
+    "coverSub": "CINEMATIC LIGHT",
+    "ratio": "4:5",
+    "model": "balanced",
+    "prompt": "产品置于真实使用场景中，自然侧逆光，浅景深，背景虚化但保留环境信息，电影感调色，画面高级克制，写实材质与光影，不要多余文字。"
+  },
+  {
+    "id": "three-c",
+    "name": "3C 极简",
+    "cover": "radial-gradient(120% 90% at 50% 0%, #9fb7e8, #2f3b64)",
+    "coverText": "NOVA Pro",
+    "coverSub": "FLAGSHIP LAUNCH",
+    "ratio": "1:1",
+    "model": "fast",
+    "prompt": "3C 数码产品极简广告：深色渐变背景，产品悬浮或立于几何台面，硬边轮廓光，金属与玻璃质感清晰，冷色调，画面干净，一个焦点，不要文字。"
+  },
+  {
+    "id": "soft-portrait",
+    "name": "柔光人像",
+    "cover": "radial-gradient(120% 90% at 30% 20%, #e9b8b8, #7c3a3a)",
+    "coverText": "Soft Light",
+    "coverSub": "PORTRAIT",
+    "ratio": "3:4",
+    "model": "balanced",
+    "prompt": "柔光人像，自然窗光，浅景深，肤质真实有细节但不过度锐化，背景干净，构图偏三分法，情绪自然松弛，胶片质感，避免塑料感。"
+  },
+  {
+    "id": "social-vertical",
+    "name": "社媒竖版",
+    "cover": "radial-gradient(120% 90% at 80% 80%, #b7a6d3, #3a2f52)",
+    "coverText": "Story",
+    "coverSub": "9:16 SOCIAL",
+    "ratio": "9:16",
+    "model": "fast",
+    "prompt": "9:16 竖版社媒配图：主体偏下，上方留白给文字，鲜艳但克制的配色，图形感强的几何背景，现代编辑设计风格，避免文字，留出文案空间。"
+  }
+]

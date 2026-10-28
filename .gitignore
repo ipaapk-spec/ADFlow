@@ -1,0 +1,40 @@
+# secrets / local env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.kdbx
+
+# dependencies / build output
+node_modules/
+.pnpm-store/
+.next/
+out/
+build/
+dist/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# local data / working files
+data/
+temp/
+.shots/
+input/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# logs / OS / editor
+*.log
+pnpm-debug.log*
+.DS_Store
+.idea/
+.vscode/

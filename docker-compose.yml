@@ -1,0 +1,29 @@
+services:
+  adflow:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: adflow:latest
+    container_name: adflow
+    restart: unless-stopped
+    ports:
+      - "3200:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - ADFLOW_DATA_DIR=/app/data
+      - TZ=Asia/Shanghai
+    volumes:
+      - ./data:/app/data
+    user: "1000:1000"
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/api/models').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
