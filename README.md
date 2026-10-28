@@ -2,9 +2,11 @@
 
 > 一个人的 AI 图片生产线：文生图 / 图生图 / 批量出图，本地跑，成本看得见。
 
-![生成台](docs/screens/app-create.png)
+![ADflow 生成台：Agnes 模型一次出 4 张 9:16](docs/screens/app-create.png)
 
-基于 RunningHub OpenAPI（nano-banana / seedream）封装，Next.js + SQLite，数据全在本机。
+<sub>生成台：Agnes 图像模型 · 9:16 · 一次 4 张</sub>
+
+基于 RunningHub / Agnes OpenAPI 封装，Next.js + SQLite，数据全在本机。
 
 ---
 
