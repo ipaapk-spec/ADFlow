@@ -91,6 +91,13 @@ textarea:focus, input:focus { border-color: var(--ink); background: #fff; }
 .btn-primary small { font-weight: 500; opacity: .85; font-size: 12px; }
 .btn-primary:disabled { box-shadow: none; }
 
+/* 「赞」图标按钮 */
+.like { display: inline-flex; align-items: center; gap: 6px; line-height: 1; }
+.like svg { display: block; flex: none; transition: transform .12s ease; }
+.like:hover { color: var(--ink); }
+.like:active svg { transform: scale(.86); }
+.like.on, .shot .actions .like.on, .acard .tools .like.on { color: var(--accent); }
+
 /* uploads */
 .up { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .slot { position: relative; height: 76px; border: 1.5px dashed #d6d1c5; border-radius: 10px; display: grid; place-items: center; color: #a9a396; font-size: 20px; background: #fbfaf7; overflow: hidden; }

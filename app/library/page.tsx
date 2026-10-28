@@ -41,7 +41,7 @@ export default async function LibraryPage({
           全部
         </Link>
         <Link className={`chip ${fav ? "on" : ""}`} href="/library?fav=1">
-          已收藏
+          已赞
         </Link>
         <Link className={`chip ${q ? "on" : ""}`} href="/library?q=%E6%B5%B7%E6%8A%A5">
           海报

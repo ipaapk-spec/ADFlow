@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { MaskEditor } from "@/components/mask-editor";
 import { OutpaintPanel } from "@/components/outpaint-panel";
 import { CropEditor } from "@/components/crop-editor";
+import { LikeButton } from "@/components/like-button";
 
 interface Detail {
   asset: {
@@ -238,9 +239,12 @@ export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: s
                 <a className="btn" href={detail.asset.url ?? "#"} download={`adflow-${detail.asset.id}.jpg`}>
                   ↓ 下载原图
                 </a>
-                <button className="btn" onClick={() => void toggleFavorite()}>
-                  {favorite ? "★ 已收藏" : "♡ 收藏"}
-                </button>
+                <LikeButton
+                  liked={favorite}
+                  className="btn"
+                  label={favorite ? "已赞" : "赞"}
+                  onClick={() => void toggleFavorite()}
+                />
                 <button className="btn" onClick={() => void remove()} style={{ color: "var(--danger)" }}>
                   删除
                 </button>

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Lightbox } from "@/components/lightbox";
+import { LikeButton } from "@/components/like-button";
 import { requestId } from "@/lib/client-uuid";
 import { hasPromptPlaceholders, promptLabel } from "@/lib/prompt";
 
@@ -713,9 +714,11 @@ export function CreateClient() {
                       <a href={asset.url} download={`adflow-${asset.id}.jpg`}>
                         下载
                       </a>
-                      <button onClick={() => void toggleFavorite(asset)}>
-                        {asset.favorite ? "★" : "♡"}
-                      </button>
+                      <LikeButton
+                        liked={asset.favorite === 1}
+                        size={14}
+                        onClick={() => void toggleFavorite(asset)}
+                      />
                     </div>
                   </div>
                 ))}
@@ -740,7 +743,7 @@ export function CreateClient() {
                   ↻ 再来一批
                 </button>
                 <a className="btn" href="/library">
-                  ♡ 去图库看
+                  去图库看
                 </a>
                 <span style={{ fontSize: 12, color: "var(--sub)", alignSelf: "center" }}>
                   种子 {String(gen.params?.seed ?? "随机")} · 花费 ¥{gen.cost_cny.toFixed(2)}

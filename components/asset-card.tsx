@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Lightbox } from "@/components/lightbox";
+import { LikeButton } from "@/components/like-button";
 
 export interface AssetCardData {
   id: string;
@@ -59,9 +60,7 @@ export function AssetCard({
         />
       </button>
       <div className="tools">
-        <button onClick={() => void toggle()} title={favorite ? "取消收藏" : "收藏"}>
-          {favorite ? "★" : "♡"}
-        </button>
+        <LikeButton liked={favorite} size={15} onClick={() => void toggle()} />
         <a href={asset.url} download={`adflow-${asset.id}.jpg`} title="下载">
           ↓
         </a>
