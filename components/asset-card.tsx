@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Lightbox } from "@/components/lightbox";
 import { LikeButton } from "@/components/like-button";
 
 export interface AssetCardData {
@@ -16,17 +15,16 @@ export interface AssetCardData {
 
 export function AssetCard({
   asset,
-  autoOpen = false,
-  autoEdit = false,
+  onOpen,
+  onRemoved,
 }: {
   asset: AssetCardData;
-  autoOpen?: boolean;
-  autoEdit?: boolean;
+  onOpen: (id: string) => void;
+  onRemoved?: (id: string) => void;
 }) {
   const [favorite, setFavorite] = useState(asset.favorite === 1);
   const [removed, setRemoved] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [open, setOpen] = useState(autoOpen);
 
   if (removed) return null;
 
@@ -43,12 +41,15 @@ export function AssetCard({
     setBusy(true);
     const res = await fetch(`/api/assets/${asset.id}`, { method: "DELETE" });
     setBusy(false);
-    if (res.ok) setRemoved(true);
+    if (res.ok) {
+      setRemoved(true);
+      onRemoved?.(asset.id);
+    }
   };
 
   return (
     <figure className="acard" style={{ opacity: busy ? 0.5 : 1 }}>
-      <button onClick={() => setOpen(true)} style={{ display: "block", width: "100%", padding: 0 }}>
+      <button onClick={() => onOpen(asset.id)} style={{ display: "block", width: "100%", padding: 0 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={asset.thumb}
@@ -72,7 +73,6 @@ export function AssetCard({
         <b>{asset.width}×{asset.height}</b>
         <span>{new Date(asset.created_at).toLocaleDateString("zh-CN")}</span>
       </figcaption>
-      {open && <Lightbox assetId={asset.id} initialEdit={autoEdit} onClose={() => setOpen(false)} />}
     </figure>
   );
 }

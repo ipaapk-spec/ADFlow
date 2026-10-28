@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { MaskEditor } from "@/components/mask-editor";
 import { OutpaintPanel } from "@/components/outpaint-panel";
@@ -41,8 +41,20 @@ const MODE_LABEL: Record<string, string> = {
   video: "视频",
 };
 
-export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: string; onClose: () => void; initialEdit?: boolean }) {
+export function Lightbox({
+  assetId,
+  siblings,
+  onClose,
+  initialEdit = false,
+}: {
+  assetId: string;
+  /** 可左右切换的图片列表（详情打开处的显示顺序）；不传则只能看当前这张 */
+  siblings?: string[];
+  onClose: () => void;
+  initialEdit?: boolean;
+}) {
   const router = useRouter();
+  const [currentId, setCurrentId] = useState(assetId);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [error, setError] = useState("");
   const [favorite, setFavorite] = useState(false);
@@ -53,9 +65,36 @@ export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: s
   const [outpainting, setOutpainting] = useState(false);
   const [cropping, setCropping] = useState(false);
 
+  // 从外面换了图片（比如再点另一张卡片）时跟上
+  useEffect(() => {
+    setCurrentId(assetId);
+  }, [assetId]);
+
+  const list = useMemo(() => {
+    const base = siblings?.length ? siblings : [];
+    return base.includes(currentId) ? base : [currentId, ...base];
+  }, [siblings, currentId]);
+
+  const index = list.indexOf(currentId);
+  const editable = editing || outpainting || cropping;
+  const canStep = list.length > 1;
+
+  const step = useCallback(
+    (delta: number) => {
+      if (list.length < 2) return;
+      const next = list[(index + delta + list.length) % list.length];
+      if (next && next !== currentId) setCurrentId(next);
+    },
+    [list, index, currentId],
+  );
+
   useEffect(() => {
     let alive = true;
-    fetch(`/api/assets/${assetId}`, { cache: "no-store" })
+    setDetail(null);
+    setError("");
+    setCompare(false);
+    setCopied(false);
+    fetch(`/api/assets/${currentId}`, { cache: "no-store" })
       .then((res) => res.json())
       .then((data: Detail) => {
         if (!alive) return;
@@ -72,32 +111,49 @@ export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: s
     return () => {
       alive = false;
     };
-  }, [assetId]);
+  }, [currentId]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      // 画遮罩 / 裁剪 / 扩图时，键盘交给里面的浮层
+      if (editable) return;
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+      const target = event.target as HTMLElement | null;
+      const tag = target?.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target?.isContentEditable) return;
+      const prev = event.key === "ArrowLeft";
+      const next =
+        event.key === "ArrowRight" ||
+        event.key === " " ||
+        event.key === "Spacebar" ||
+        event.code === "Space";
+      if (!prev && !next) return;
+      event.preventDefault(); // 空格别让页面跟着滚
+      step(prev ? -1 : 1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, editable, step]);
 
   const toggleFavorite = useCallback(async () => {
-    const res = await fetch(`/api/assets/${assetId}`, { method: "POST" });
+    const res = await fetch(`/api/assets/${currentId}`, { method: "POST" });
     if (res.ok) {
       const data = await res.json();
       setFavorite(Boolean(data.favorite));
     }
-  }, [assetId]);
+  }, [currentId]);
 
   const remove = useCallback(async () => {
     if (!confirm("移到废纸篓？7 天后清理。")) return;
-    const res = await fetch(`/api/assets/${assetId}`, { method: "DELETE" });
+    const res = await fetch(`/api/assets/${currentId}`, { method: "DELETE" });
     if (res.ok) {
       onClose();
       router.refresh();
     }
-  }, [assetId, onClose, router]);
+  }, [currentId, onClose, router]);
 
   const copyPrompt = useCallback(async () => {
     if (!detail) return;
@@ -130,12 +186,23 @@ export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: s
     <div className="backdrop" onClick={onClose}>
       <div className="modal" onClick={(event) => event.stopPropagation()}>
         <div className="modal-head">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
             <b style={{ fontSize: 14 }}>图片详情</b>
             {detail && (
               <span className="muted" style={{ fontSize: 12 }}>
                 {detail.generation.model_name ?? detail.generation.model_key} ·{" "}
                 {detail.asset.width}×{detail.asset.height}
+              </span>
+            )}
+            {canStep && (
+              <span
+                className="lb-hint muted"
+                style={{ fontSize: 12, display: "flex", alignItems: "center", gap: 8 }}
+              >
+                <b style={{ color: "var(--ink)", fontWeight: 600 }}>
+                  {index + 1} / {list.length}
+                </b>
+                <span>← → 切换 · 空格下一张</span>
               </span>
             )}
           </div>
@@ -191,6 +258,28 @@ export function Lightbox({ assetId, onClose, initialEdit = false }: { assetId: s
               ) : (
                 /* eslint-disable-next-line @next/next/no-img-element */
                 <img src={detail.asset.url ?? ""} alt="生成结果" />
+              )}
+              {canStep && (
+                <>
+                  <button
+                    className="lb-arrow prev"
+                    onClick={() => step(-1)}
+                    disabled={editable}
+                    aria-label="上一张"
+                    title="上一张（←）"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    className="lb-arrow next"
+                    onClick={() => step(1)}
+                    disabled={editable}
+                    aria-label="下一张"
+                    title="下一张（→ / 空格）"
+                  >
+                    ›
+                  </button>
+                </>
               )}
             </div>
 

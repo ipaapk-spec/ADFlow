@@ -798,7 +798,11 @@ export function CreateClient() {
       </aside>
 
       {selectedAsset && (
-        <Lightbox assetId={selectedAsset} onClose={() => setSelectedAsset(null)} />
+        <Lightbox
+          assetId={selectedAsset}
+          siblings={gen?.assets.map((asset) => asset.id)}
+          onClose={() => setSelectedAsset(null)}
+        />
       )}
     </div>
   );

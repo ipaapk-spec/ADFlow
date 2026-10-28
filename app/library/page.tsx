@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { listAssets } from "@/lib/db";
 import { fileUrl } from "@/lib/storage";
-import { AssetCard } from "@/components/asset-card";
+import { AssetGrid } from "@/components/asset-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -63,24 +63,19 @@ export default async function LibraryPage({
           </Link>
         </div>
       ) : (
-        <div className="masonry">
-          {assets.map((asset) => (
-            <AssetCard
-              key={asset.id}
-              autoOpen={openAsset === asset.id}
-              autoEdit={openAsset === asset.id && openEdit}
-              asset={{
-                id: asset.id,
-                url: fileUrl(asset.path) ?? "",
-                thumb: fileUrl(asset.thumb_path ?? asset.path) ?? "",
-                width: asset.width,
-                height: asset.height,
-                favorite: asset.favorite,
-                created_at: asset.created_at,
-              }}
-            />
-          ))}
-        </div>
+        <AssetGrid
+          initialOpen={openAsset}
+          initialEdit={openEdit}
+          assets={assets.map((asset) => ({
+            id: asset.id,
+            url: fileUrl(asset.path) ?? "",
+            thumb: fileUrl(asset.thumb_path ?? asset.path) ?? "",
+            width: asset.width,
+            height: asset.height,
+            favorite: asset.favorite,
+            created_at: asset.created_at,
+          }))}
+        />
       )}
     </>
   );
